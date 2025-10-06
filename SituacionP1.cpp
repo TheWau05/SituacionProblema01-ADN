@@ -65,7 +65,7 @@ int main() {
         cout << "  - Primeros 12 nt: " << first12 << "\n";
 
         string pal = manacher_longest_palindrome(seq);
-        cout << "  - Palíndromo más largo: " << (pal.empty() ? "(ninguno)" : pal) << "\n";
+        cout << "  - Palindromo mas largo: " << (pal.empty() ? "(ninguno)" : pal) << "\n";
         cout << "  - Caracteres: " << pal.size() << " nt\n" << "\n";
 
        
