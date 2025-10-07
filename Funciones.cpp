@@ -161,7 +161,7 @@ std::vector<ProteinInfo> read_protein_into_file(const std::string& filename) {
     return proteins;
 }
 
-std::pair<int, std::string> find_protein_in_genome(const std::string& genome, const std::string& protein, int window_size = 3000) {
+std::pair<int, std::string> find_protein_in_genome(const std::string& genome, const std::string& protein, int window_size ) {
     for (size_t i = 0; i + 2 < genome.length(); i++) {
         // Try all three reading frames at this position
         for (int frame = 0; frame < 3; frame++) {

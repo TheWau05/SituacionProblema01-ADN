@@ -5,7 +5,6 @@
 #include <map>
 #include <algorithm>
 #include "Funciones.hpp"
-#include "Funciones.cpp"
 
 using namespace std;
 
