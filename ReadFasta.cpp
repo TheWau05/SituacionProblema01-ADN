@@ -21,7 +21,7 @@ std::pair<std::string, std::string> read_fasta(const std::string& filename) {
             if (!isspace(static_cast<unsigned char>(c))) {
                 char up = toupper(static_cast<unsigned char>(c));
                 if (up == 'U') up = 'T'; 
-                sequence += up;  // ✅ Aquí agregamos cada carácter a la secuencia
+                sequence += up;  
             }
         }
     }

@@ -1,3 +1,13 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include "Funciones.hpp"
+
+using namespace std;
+
 //tenemos_que_hacer_que_al leer tttaaac cambie de reading frame para el siguiente codon
 std::string codon_transformer(const std::string& seq) {
     std::map<std::string, char> codon_table = {
@@ -17,6 +27,7 @@ std::string codon_transformer(const std::string& seq) {
         {"TTC", 'F'}, {"TTT", 'F'}, {"TTA", 'L'}, {"TTG", 'L'},
         {"TAC", 'Y'}, {"TAT", 'Y'}, {"TAA", '*'}, {"TAG", '*'},
         {"TGC", 'C'}, {"TGT", 'C'}, {"TGA", '*'}, {"TGG", 'W'},
+        {"TTTAAAC", 'X'}  // Custom codon to change reading frame
     };
 
     std::string protein;
