@@ -5,23 +5,74 @@
 #include <map>
 #include <algorithm>
 #include "Funciones.hpp"
-
 using namespace std;
 
+
+ //Esta parte crea el Longest Prefix Suffix para pder ejecutar la busqueda
+vector<int> build_lps(const string &pattern) {
+    vector<int> lps(pattern.size(), 0);
+    int len = 0;
+    for (size_t i = 1; i < pattern.size();) {
+        if (pattern[i] == pattern[len]) {
+            lps[i++] = ++len;
+        } else if (len > 0) {
+            len = lps[len - 1];
+        } else {
+            lps[i++] = 0;
+        }
+    }
+    return lps;
+}
+
+ //Esta parte realiza la busqueda 
+int kmp_search(const string &text, const string &pattern, size_t start = 0) {
+    if (pattern.empty()) return 0;
+    if (text.empty() || pattern.size() > text.size()) return -1;
+
+    vector<int> lps = build_lps(pattern);
+    size_t i = start, j = 0;
+
+    while (i < text.size()) {
+        if (text[i] == pattern[j]) {
+            i++;
+            j++;
+            if (j == pattern.size()) {
+                return static_cast<int>(i - j);
+            }
+        } else if (j > 0) {
+            j = lps[j - 1];
+        } else {
+            i++;
+        }
+    }
+    return -1;
+}
+
 /*
- * ALGORITMO: Busqueda ingenua de patron (Naive Pattern Search)
- * Complejidad: O(n*m) donde n = texto, m = patron
+ * ALGORITMO: Búsqueda de patrón usando KMP
+ * Complejidad: O(n + m) donde n = texto, m = patrón
  * Uso: Encontrar todas las apariciones de un gen en el genoma completo
- * 
- * Nota: Se usa string::find() de STL que implementa Boyer-Moore o similar
- * optimizado, pero conceptualmente es busqueda de subcadena.
  */
 vector<int> find_all_occurrences(const string& text, const string& pattern) {
     vector<int> positions;
-    size_t pos = text.find(pattern, 0);
-    while(pos != string::npos) {
-        positions.push_back(pos);
-        pos = text.find(pattern, pos + 1);
+    if (pattern.empty() || text.empty()) return positions;
+
+    vector<int> lps = build_lps(pattern);
+    size_t i = 0, j = 0;
+
+    while (i < text.size()) {
+        if (text[i] == pattern[j]) {
+            i++;
+            j++;
+            if (j == pattern.size()) {
+                positions.push_back(static_cast<int>(i - j));
+                j = lps[j - 1];  // continuar buscando
+            }
+        } else if (j > 0) {
+            j = lps[j - 1];
+        } else {
+            i++;
+        }
     }
     return positions;
 }
@@ -37,15 +88,14 @@ string get_codon_at_position(const string& genome, int pos) {
 int main() {
     cout << "=== ANALISIS DEL GENOMA SARS-CoV-2 ===\n\n";
     
-    // ========== PARTE 1: Encontrar indices de genes en el genoma ==========
     cout << "PARTE 1: Indices de genes en el genoma\n";
     cout << "========================================\n\n";
     
     auto [header_genome, genome] = read_fasta("SARS-COV-2-MN908947.3.txt");
     
     vector<pair<string, string>> genes = {
-        {"gen-S.txt", "Gen S (Spike)"},
-        {"gen-M.txt", "Gen M (Membrane)"},
+        {"gen-S.txt", "Gen S"},
+        {"gen-M.txt", "Gen M"},
         {"gen-ORF1AB.txt", "Gen ORF1AB"}
     };
     
@@ -54,14 +104,16 @@ int main() {
      * Para cada gen, busca su secuencia completa dentro del genoma
      */
     for (const auto& [file, name] : genes) {
-        auto [header, gene_seq] = read_fasta(file);
+        auto [header, seq] = read_fasta(file);
+        auto [header_Wu, seq_Wu] = read_fasta("SARS-COV-2-MN908947.3.txt");
+        auto [header_Tx, seq_Tx] = read_fasta("SARS-COV-2-MT106054.1.txt");
         
-        if (gene_seq.empty()) {
+        if (seq.empty()) {
             cout << name << ": No se pudo leer\n\n";
             continue;
         }
         
-        vector<int> positions = find_all_occurrences(genome, gene_seq);
+        vector<int> positions = find_all_occurrences(genome, seq);
         
         cout << name << ":\n";
         cout << "  Archivo: " << file << "\n";
@@ -77,7 +129,7 @@ int main() {
             cout << "\n";
         }
         
-        string first12 = gene_seq.substr(0, min<size_t>(12, gene_seq.size()));
+        string first12 = seq.substr(0, min<size_t>(12, seq.size()));
         cout << "  Primeros 12 caracteres: " << first12 << "\n\n";
     }
     
@@ -179,7 +231,7 @@ int main() {
                     }
                     
                     string codon = genome.substr(i + j * 3, 3);
-                    if (codon_table.find(codon) != codon_table.end()) {
+                    if (codon_table.find(codon) != codon_table.end()) { // usa find para encontrar llave del hash
                         char aa = codon_table[codon];
                         if (aa == '*') break;  // Codon de paro
                         if (aa != protein.sequence[j]) {
