@@ -12,7 +12,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -g
 TARGET = main_executable
 
 # List of all source (.cpp) files
-SOURCES = SituacionP1.cpp ReadFasta.cpp LongestPalindrome.cpp
+SOURCES = SituacionP1.cpp ReadFasta.cpp LongestPalindrome.cpp Indices_aparicion.cpp codon_transformer.cpp
 
 # Automatically generate object (.o) file names from source files
 OBJECTS = $(SOURCES:.cpp=.o)

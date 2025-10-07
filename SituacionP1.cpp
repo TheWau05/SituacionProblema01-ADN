@@ -15,6 +15,9 @@ int main() {
         "gen-M.txt",
         "gen-ORF1AB.txt"
     };
+    auto [header_Wu, seq_Wu] = read_fasta("SARS-COV-2-MN908947.3.txt");
+    auto [header_Tx, seq_Tx] = read_fasta("SARS-COV-2-MT106054.1.txt");
+
 
     for (size_t i = 0; i < files.size(); i++) {
         auto [header, seq] = read_fasta(files[i]); 
@@ -30,7 +33,13 @@ int main() {
 
         string codon = codon_transformer(seq);
         cout << "  - Proteina traducida: " << (codon.empty() ? "(ninguna)" : codon) << "\n";
-        cout << "  - Aminoacidos: " << codon.size() << " aa\n" << "\n";
+        cout << "  - Aminoacidos: " << codon.size() << " aa\n";
+
+        int aparicionWu = apariciones(seq, seq_Wu); 
+        cout <<"  - Aparece "<< aparicionWu <<" en Wuhan"<<"\n";
+
+        int aparicionTx = apariciones(seq, seq_Tx); 
+        cout <<"  - Aparece "<< aparicionTx <<" en Wuhan"<<"\n"<<"\n";
     }
 
     return 0;
