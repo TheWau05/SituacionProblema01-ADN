@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include "Funciones.hpp"
+#include "Funciones.cpp"
 
 using namespace std;
 
@@ -31,6 +32,20 @@ int main() {
         string codon = codon_transformer(seq);
         cout << "  - Proteina traducida: " << (codon.empty() ? "(ninguna)" : codon) << "\n";
         cout << "  - Aminoacidos: " << codon.size() << " aa\n" << "\n";
+
+        vector<ProteinInfo> proteins = read_protein_into_file("seq-proteins.txt");
+        cout << proteins.size() << " proteinas leidas de seq-proteins.txt\n";
+
+        for (const auto& protein : proteins) {
+            string comparison = protein_compare(codon, protein.sequence);
+            cout << "    * Comparación con " << protein.name << ": " << comparison << "\n";
+            //auto [pos, segment] = find_protein_in_genome(seq, protein.sequence);
+            //if (pos != -1) {
+            //    cout << "      - Proteina encontrada en genoma en posición " << pos << ": " << segment << "\n";
+            //} else {
+            //    cout << "      - Proteina no encontrada en el genoma.\n";
+            //}
+        }
     }
 
     return 0;
