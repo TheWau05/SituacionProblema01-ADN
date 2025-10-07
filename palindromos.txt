@@ -1,0 +1,15 @@
+PALINDROMOS MAS LARGOS EN GENES SARS-CoV-2
+==========================================
+
+Gen S (Spike):
+  Longitud: 15 nt
+  Secuencia: GAATTTGTGTTTAAG
+
+Gen M (Membrane):
+  Longitud: 11 nt
+  Secuencia: CTAAAGAAATC
+
+Gen ORF1AB:
+  Longitud: 20 nt
+  Secuencia: CTCAATGACTTCAGTAACTC
+
