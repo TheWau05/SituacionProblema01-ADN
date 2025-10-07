@@ -7,12 +7,15 @@
 #include "Funciones.hpp"
 
 using namespace std;
+
 int main() {
+
     vector<string> files = {
         "gen-S.txt",
         "gen-M.txt",
         "gen-ORF1AB.txt"
     };
+
     for (size_t i = 0; i < files.size(); i++) {
         auto [header, seq] = read_fasta(files[i]); 
         cout << "[" << (i+1) << "] " << files[i] << "\n";
@@ -25,7 +28,10 @@ int main() {
         cout << "  - Palindromo mas largo: " << (pal.empty() ? "(ninguno)" : pal) << "\n";
         cout << "  - Caracteres: " << pal.size() << " nt\n" << "\n";
 
-       
+        string codon = codon_transformer(seq);
+        cout << "  - Proteina traducida: " << (codon.empty() ? "(ninguna)" : codon) << "\n";
+        cout << "  - Aminoacidos: " << codon.size() << " aa\n" << "\n";
     }
+
     return 0;
 }
